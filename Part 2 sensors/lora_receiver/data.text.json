@@ -1,0 +1,84 @@
+{
+    "model": {
+        "value": "ttgo-t-beam",
+        "type": "Text"
+    },
+    "project": {
+        "value": "iot-2025-02",
+        "type": "Text"
+    },
+    "latitude": {
+        "value": 6.240928,
+        "type": "Float"
+    },
+    "longitude": {
+        "value": -75.590935,
+        "type": "Float"
+    },
+    "temperature": {
+        "value": 24.07,
+        "type": "Float"
+    },
+    "humidity": {
+        "value": 78.55,
+        "type": "Float"
+    },
+    "lora_received_power": {
+        "value": -35,
+        "type": "Integer",
+        "metadata": {
+            "unitCode": {
+                "value": "DBM",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "decibel_milliwatt",
+                "type": "Text"
+            }
+        }
+    },
+    "lora_signal_quality": {
+        "value": 10,
+        "type": "Integer",
+        "metadata": {
+            "unitCode": {
+                "value": "DB",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "decibel",
+                "type": "Text"
+            }
+        }
+    },
+    "lora_frequency_error": {
+        "value": 3933,
+        "type": "Integer",
+        "metadata": {
+            "unitCode": {
+                "value": "HTZ",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "hertz",
+                "type": "Text"
+            }
+        }
+    },
+    "timestamp_received": {
+        "value": 11831,
+        "type": "Integer",
+        "metadata": {
+            "unitCode": {
+                "value": "MS",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "milliseconds",
+                "type": "Text"
+            }
+        }
+    },
+    "id": "sensor1",
+    "type": "receiver"
+}

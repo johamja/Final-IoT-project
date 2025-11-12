@@ -1,0 +1,124 @@
+{
+    "id": "sensor2",
+    "type": "receiver",
+    "model": {
+        "value": "ttgo-t-beam",
+        "type": "Text"
+    },
+    "project": {
+        "value": "Iot-2025-02",
+        "type": "Text"
+    },
+    "latitude": {
+        "value": 6.244203,
+        "type": "Float",
+        "metadata": {
+            "unitCode": {
+                "value": "DD",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "decimal_degrees",
+                "type": "Text"
+            }
+        }
+    },
+    "longitude": {
+        "value": -75.581211,
+        "type": "Float",
+        "metadata": {
+            "unitCode": {
+                "value": "DD",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "decimal_degrees",
+                "type": "Text"
+            }
+        }
+    },
+    "temperature": {
+        "value": 314,
+        "type": "Float",
+        "metadata": {
+            "unitCode": {
+                "value": "CEL",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "degrees_celsius",
+                "type": "Text"
+            }
+        }
+    },
+    "humidity": {
+        "value": 314,
+        "type": "Float",
+        "metadata": {
+            "unitCode": {
+                "value": "P1",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "percent_of_relative_humidity",
+                "type": "Text"
+            }
+        }
+    },
+    "lora_received_power": {
+        "value": 314,
+        "type": "Integer",
+        "metadata": {
+            "unitCode": {
+                "value": "DBM",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "decibel_milliwatt",
+                "type": "Text"
+            }
+        }
+    },
+    "lora_signal_quality": {
+        "value": 314,
+        "type": "Integer",
+        "metadata": {
+            "unitCode": {
+                "value": "DB",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "decibel",
+                "type": "Text"
+            }
+        }
+    },
+    "lora_frequency_error": {
+        "value": 314,
+        "type": "Integer",
+        "metadata": {
+            "unitCode": {
+                "value": "HTZ",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "hertz",
+                "type": "Text"
+            }
+        }
+    },
+    "timestamp_received": {
+        "value": 314,
+        "type": "Integer",
+        "metadata": {
+            "unitCode": {
+                "value": "MS",
+                "type": "Text"
+            },
+            "unit": {
+                "value": "milliseconds",
+                "type": "Text"
+            }
+        }
+    }
+}

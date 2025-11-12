@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control Remoto del Tank - Puente WebSocket</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin:0; padding:1.5rem; background:#101820; color:#eee; }
+    h1 { margin-top:0; }
+    .grid { display:grid; grid-template-columns:repeat(3, 8.5rem); grid-template-rows:repeat(3, 3.5rem); gap:0.5rem; justify-content:center; margin-top:1.5rem; }
+    button { width:100%; height:100%; font-size:1rem; border:none; border-radius:0.5rem; cursor:pointer; background:#ff7a18; color:#101820; font-weight:600; }
+    button.stop { background:#ff3b30; color:#fff; }
+    .speeds { margin-top:2rem; display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center; }
+    .speeds label { display:flex; flex-direction:column; align-items:center; font-size:0.85rem; }
+    input[type=range] { width:200px; }
+    .panel { max-width:920px; margin:0 auto; }
+    .status-box { background:#182430; padding:1rem; border-radius:0.5rem; margin-top:1.5rem; font-size:0.9rem; }
+    .row { display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-end; }
+    input[type=text] { padding:0.5rem; font-size:0.95rem; border-radius:0.4rem; border:1px solid #444; background:#1e2c38; color:#eee; width:320px; }
+    select { padding:0.5rem; font-size:0.95rem; border-radius:0.4rem; border:1px solid #444; background:#1e2c38; color:#eee; }
+    .small { font-size:0.75rem; opacity:0.7; }
+    .log { max-height:160px; overflow:auto; font-family:monospace; background:#0f161d; padding:0.5rem 0.75rem; border-radius:0.4rem; margin-top:0.75rem; }
+    .footer { margin-top:3rem; font-size:0.75rem; text-align:center; opacity:0.6; }
+    a { color:#ff7a18; }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1>Control Remoto del Tank</h1>
+    <p>Flujo: PC/Web → Servidor Puente → ESP32 (LILYGO). Ingresa la URL del puente, selecciona el <code>tankId</code> y envía comandos.</p>
+
+    <div class="row">
+      <div>
+        <label>URL WebSocket Puente<br>
+          <input id="bridgeUrl" type="text" placeholder="ws://localhost:8000/ws/control" value="ws://localhost:8000/ws/control" />
+        </label>
+      </div>
+      <div>
+        <label>Tank ID<br>
+          <input id="tankId" type="text" placeholder="1234" value="tank-1" />
+        </label>
+      </div>
+      <div>
+        <button id="connectBtn" style="height:3rem; width:8rem;">Conectar</button>
+      </div>
+    </div>
+    <div class="small">El ESP32 debe conectarse al endpoint: <code>ws://HOST:PORT/ws/tank/&lt;tankId&gt;</code></div>
+
+    <div class="grid" style="margin-top:2rem;">
+      <div></div>
+      <button data-cmd="forward">Forward</button>
+      <div></div>
+      <button data-cmd="left">Left</button>
+      <button class="stop" data-cmd="stop">Stop</button>
+      <button data-cmd="right">Right</button>
+      <div></div>
+      <button data-cmd="backward">Backward</button>
+      <div></div>
+    </div>
+
+    <div class="speeds">
+      <label>Left Speed
+        <input id="leftSpeed" type="range" min="0" max="255" value="128" />
+        <span id="leftValue">128</span>
+      </label>
+      <label>Right Speed
+        <input id="rightSpeed" type="range" min="0" max="255" value="128" />
+        <span id="rightValue">128</span>
+      </label>
+      <button data-cmd="speed" id="speedBtn" style="width:10rem; height:3rem;">Set Speeds</button>
+    </div>
+
+    <div class="status-box" id="statusBox">
+      <strong>Estado:</strong> <span id="state">DESCONECTADO</span><br>
+      <strong>Online Tanks:</strong> <span id="onlineTanks">-</span>
+      <div class="log" id="log"></div>
+    </div>
+
+    <div class="footer">Interfaz inspirada en la versión embebida. Cifrado LoRa ocurre en el firmware del ESP32. Ajusta la lógica de seguridad según necesidades.</div>
+  </div>
+
+<script>
+  const bridgeInput = document.getElementById('bridgeUrl');
+  const tankInput = document.getElementById('tankId');
+  const connectBtn = document.getElementById('connectBtn');
+  const stateEl = document.getElementById('state');
+  const logEl = document.getElementById('log');
+  const onlineEl = document.getElementById('onlineTanks');
+  const leftRange = document.getElementById('leftSpeed');
+  const rightRange = document.getElementById('rightSpeed');
+  const leftValue = document.getElementById('leftValue');
+  const rightValue = document.getElementById('rightValue');
+
+  let ws = null;
+  let selectedTank = null;
+
+  function log(msg) {
+    const line = document.createElement('div');
+    line.textContent = new Date().toISOString() + ' | ' + msg;
+    logEl.appendChild(line);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  function updateSpeedLabels(){
+    leftValue.textContent = leftRange.value;
+    rightValue.textContent = rightRange.value;
+  }
+  leftRange.addEventListener('input', updateSpeedLabels);
+  rightRange.addEventListener('input', updateSpeedLabels);
+  updateSpeedLabels();
+
+  connectBtn.addEventListener('click', () => {
+    if (ws && ws.readyState === WebSocket.OPEN){ ws.close(); }
+    const url = bridgeInput.value.trim();
+    ws = new WebSocket(url);
+    stateEl.textContent = 'CONECTANDO...';
+    log('Conectando al puente: ' + url);
+    ws.onopen = () => {
+      stateEl.textContent = 'CONECTADO';
+      log('Puente conectado');
+      // Seleccionar tank
+      selectedTank = tankInput.value.trim();
+      ws.send(JSON.stringify({ type: 'select', tankId: selectedTank }));
+    };
+    ws.onclose = () => { stateEl.textContent = 'DESCONECTADO'; log('Puente desconectado'); };
+    ws.onerror = (e) => { log('Error WS puente'); };
+    ws.onmessage = (ev) => {
+      try {
+        const data = JSON.parse(ev.data);
+        if (data.type === 'hello') {
+          onlineEl.textContent = data.tanksOnline.join(', ') || '-';
+        } else if (data.type === 'tank_online' || data.type === 'tank_offline') {
+          // refresh list locally by requesting/just updating
+          log('Evento tanque: ' + data.type + ' ' + data.tankId);
+          if (data.type === 'tank_offline' && data.tankId === selectedTank) {
+            log('El tanque seleccionado se desconectó');
+          }
+        } else if (data.type === 'selected') {
+          log('Seleccion tanque: ' + data.tankId + ' online=' + data.online);
+        } else if (data.type === 'status') {
+          // mostrar estado basico
+          if (data.state) {
+            stateEl.textContent = data.state.toUpperCase();
+          }
+        } else if (data.type === 'ack') {
+          log('ACK comando: ' + data.command);
+          stateEl.textContent = data.command.toUpperCase();
+        } else if (data.type === 'error') {
+          log('ERROR: ' + (data.error || 'desconocido'));
+        }
+      } catch (err) {
+        log('Mensaje no parseable');
+      }
+    };
+  });
+
+  function sendAction(action){
+    if (!ws || ws.readyState !== WebSocket.OPEN){
+      log('WS no conectado');
+      return;
+    }
+    if (!selectedTank){
+      log('No hay tank seleccionado');
+      return;
+    }
+    const payload = { type:'cmd', tankId: selectedTank, action: action };
+    if (action === 'speed') {
+      payload.leftSpeed = parseInt(leftRange.value, 10);
+      payload.rightSpeed = parseInt(rightRange.value, 10);
+    }
+    ws.send(JSON.stringify(payload));
+  }
+
+  document.querySelectorAll('button[data-cmd]').forEach(btn => {
+    btn.addEventListener('click', () => sendAction(btn.dataset.cmd));
+  });
+  document.getElementById('speedBtn').addEventListener('click', () => sendAction('speed'));
+</script>
+</body>
+</html>

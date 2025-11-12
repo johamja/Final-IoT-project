@@ -1,0 +1,5 @@
+core_orion/terraform/.terraform
+core_orion/terraform/aws
+
+lora_receiver/.vscode
+lora_transmitter/.vscode

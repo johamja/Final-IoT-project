@@ -1,0 +1,52 @@
+{
+    "id": 101,
+    "model": "ttgo-t-beam",
+    "project": "Iot-2025-02",
+    "type": "receiver",
+    "data": {
+        "name": "temperature, humidity and GPS sensor",
+        "type": "transmmiter",
+        "latitude": {
+            "value": 6.244203,
+            "type": "Property",
+            "unit": "decimal-degrees"
+        },
+        "longitude": {
+            "value": -75.581211,
+            "type": "Property",
+            "unit": "decimal-degrees"
+        },
+        "temperature": {
+            "value": 314,
+            "type": "Property",
+            "unit": "degrees-celsius"
+        },
+        "humidity": {
+            "value": 314,
+            "type": "Property",
+            "unit": "percent(of-relative-humidity)"
+        }
+    },
+    "lora_attributes": {
+        "received_power": {
+            "value": 314,
+            "type": "Property",
+            "unit": "decibel-milliwatt"
+        },
+        "signal_quality": {
+            "value": 314,
+            "type": "Property",
+            "unit": "decibel"
+        },
+        "frequency_error": {
+            "value": 314,
+            "type": "Property",
+            "unit": "hertz"
+        }
+    },
+    "timestamp-received": {
+        "value": 314,
+        "type": "Property",
+        "unit": "milliseconds"
+    }
+}

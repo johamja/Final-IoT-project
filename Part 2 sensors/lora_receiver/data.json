@@ -1,0 +1,26 @@
+{
+    "id": "urn:ngsi-ld:Sensor:lora-receiver-01-22",
+    "type": "Sensor",
+    "message": {
+        "type": "Property",
+        "value": "GPS:6.240891,-75.590843;T:24.35;H:93.64;#291"
+    },
+    "rssi": {
+        "type": "Property",
+        "value": -25,
+        "unitCode": "dBm"
+    },
+    "snr": {
+        "type": "Property",
+        "value": 13.5,
+        "unitCode": "dB"
+    },
+    "timestamp": {
+        "type": "Property",
+        "value": 148376
+    },
+    "receiver": {
+        "type": "Property",
+        "value": "lora-receiver-01"
+    }
+}

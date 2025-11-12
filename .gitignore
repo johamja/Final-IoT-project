@@ -1,0 +1,21 @@
+.vscode/
+__pycache__/
+*.zip
+.conda/
+node_modules/
+dist/
+visual_controller/frontend/node_modules/
+visual_controller/frontend/dist/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
