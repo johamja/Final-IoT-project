@@ -51,28 +51,6 @@ Requisitos
 - Docker y Docker Compose (si se usa el despliegue por contenedores).
 - Acceso a hardware: módulos LoRa, microcontroladores, H-bridge y sensores.
 
-Estructura de carpetas (propuesta / descriptiva)
-------------------------------------------------
-Nota: Ajusta la estructura real si difiere en el repositorio.
-- firmware/ or src/
-  - Código C++ para microcontroladores (nodos sensores y controladores de motor).
-- controllers/
-  - Implementación del control de motores y lógica de H-bridge.
-- sensors/
-  - Drivers y ejemplos de lectura de sensores (ej.: ultrasonido, IMU, encoders, temperatura).
-- gateway/
-  - Código para el gateway LoRa (p. ej. Raspberry Pi) que recibe paquetes y los publica al backend.
-- infra/
-  - Configuraciones de infraestructura (docker-compose, scripts de despliegue, configuraciones de Orion/Grafana).
-- docs/
-  - Diagramas, esquemas eléctricos, guías y manuales.
-- scripts/
-  - Utilidades para importar/exportar datos, simuladores, conversores.
-- tests/
-  - Pruebas unitarias o de integración (si aplica).
-- README.md
-  - Este archivo.
-
 Cómo usar / Despliegue rápido
 -----------------------------
 
